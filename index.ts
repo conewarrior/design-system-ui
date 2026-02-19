@@ -1,4 +1,4 @@
-// @design-geniefy/ui - shadcn/ui based components
+// @gpters-internal/ui - shadcn/ui based components
 // https://github.com/conewarrior/design-system
 
 // Accordion

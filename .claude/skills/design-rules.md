@@ -35,7 +35,7 @@
 ### 스타일 파일 구조
 
 ```
-docs/styles/globals.css
+styles/globals.css
 ├── @import "tailwindcss"     # Tailwind v4 기본
 ├── :root { ... }              # shadcn CSS 변수 (Light mode)
 ├── .dark { ... }              # shadcn CSS 변수 (Dark mode)
@@ -76,7 +76,7 @@ docs/styles/globals.css
 
 // ❌ 절대 금지: 훈련 데이터에서 흔한 Alert 패턴
 <div className="alert">
-  <span>"</span>  {/* 유니코드 따옴표 아이콘 */}
+  <span>"\u201C</span>  {/* 유니코드 따옴표 아이콘 */}
   <span>✓</span>  {/* 텍스트 체크 아이콘 */}
 </div>
 
@@ -776,14 +776,14 @@ UI 생성 시 반드시 다음 4단계를 순서대로 수행한다.
 
 ### Step 2: Tailwind/컴포넌트 선택 (Selection)
 
-Tailwind 클래스와 @design-geniefy/ui에서 사용할 요소를 선택한다.
+Tailwind 클래스와 @gpters-internal/ui에서 사용할 요소를 선택한다.
 
 ```
 체크리스트:
 - [ ] 사용할 색상 클래스 목록 (최대 3개)
 - [ ] 사용할 간격 클래스 목록
 - [ ] 사용할 radius 클래스
-- [ ] @design-geniefy/ui 컴포넌트 중 재사용 가능한 것
+- [ ] @gpters-internal/ui 컴포넌트 중 재사용 가능한 것
 ```
 
 **Tailwind 클래스 선택 예시**:
@@ -850,7 +850,7 @@ rounded-lg           /* 모서리 (6px) */
 </button>
 
 // shadcn Button 컴포넌트 사용 시
-import { Button } from '@design-geniefy/ui';
+import { Button } from '@gpters-internal/ui';
 <Button variant="default">버튼</Button>
 ```
 
@@ -864,7 +864,7 @@ import { Button } from '@design-geniefy/ui';
 </article>
 
 // shadcn Card 컴포넌트 사용 시
-import { Card, CardHeader, CardTitle, CardDescription } from '@design-geniefy/ui';
+import { Card, CardHeader, CardTitle, CardDescription } from '@gpters-internal/ui';
 <Card>
   <CardHeader>
     <CardTitle>제목</CardTitle>
@@ -883,7 +883,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@design-geniefy/ui
 />
 
 // shadcn Input 컴포넌트 사용 시
-import { Input } from '@design-geniefy/ui';
+import { Input } from '@gpters-internal/ui';
 <Input placeholder="입력하세요" />
 ```
 
@@ -933,13 +933,13 @@ import { Input } from '@design-geniefy/ui';
 
 ## 6. 컴포넌트 사용 규칙
 
-### 6.1 @design-geniefy/ui 우선 사용
+### 6.1 @gpters-internal/ui 우선 사용
 
-동일 기능의 컴포넌트가 `@design-geniefy/ui`에 있으면 반드시 사용한다.
+동일 기능의 컴포넌트가 `@gpters-internal/ui`에 있으면 반드시 사용한다.
 
 ```tsx
 // ✅ 올바른 사용
-import { Button, Card, Input } from '@design-geniefy/ui';
+import { Button, Card, Input } from '@gpters-internal/ui';
 
 // ❌ 금지: 동일 기능 컴포넌트 중복 생성
 const MyButton = () => <button className="...">...</button>;
@@ -947,7 +947,7 @@ const MyButton = () => <button className="...">...</button>;
 
 ### 6.2 커스텀 컴포넌트 생성 시
 
-@design-geniefy/ui에 없는 컴포넌트만 생성하며, 토큰 규칙을 준수한다.
+@gpters-internal/ui에 없는 컴포넌트만 생성하며, 토큰 규칙을 준수한다.
 
 ```tsx
 // 커스텀 컴포넌트 예시
@@ -966,6 +966,45 @@ const StatCard = ({ label, value }) => (
   </div>
 );
 ```
+
+### 6.3 중복 컴포넌트 재사용 (DRY)
+
+**전역으로 설정되거나 프로젝트 내에서 중복되는 컴포넌트는 반드시 재사용한다.**
+
+```tsx
+// ❌ 금지: 동일한 컴포넌트를 페이지마다 중복 생성
+// app/page1.tsx
+const PageHeader = ({ title }) => <h1 className="text-4xl font-bold">{title}</h1>;
+
+// app/page2.tsx
+const PageHeader = ({ title }) => <h1 className="text-4xl font-bold">{title}</h1>;
+
+// ✅ 올바른 사용: 공통 컴포넌트로 추출
+// components/page-header.tsx
+export const PageHeader = ({ title }) => (
+  <h1 className="text-4xl font-bold tracking-tight">{title}</h1>
+);
+
+// app/page1.tsx, app/page2.tsx
+import { PageHeader } from '@/components/page-header';
+```
+
+**재사용 대상:**
+| 대상 | 위치 | 예시 |
+|------|------|------|
+| 레이아웃 컴포넌트 | `components/layout/` | Header, Sidebar, Footer |
+| UI 공통 컴포넌트 | `components/ui/` | PageHeader, SectionTitle, EmptyState |
+| 반복되는 카드/아이템 | `components/` | UserCard, ProjectCard, StatCard |
+
+**재사용 판단 기준:**
+1. **2회 이상 사용**: 동일한 구조가 2개 이상 페이지/컴포넌트에서 반복되면 즉시 추출
+2. **스타일 동일**: className, style 속성이 완전히 같으면 컴포넌트로 분리
+3. **전역 레이아웃**: Header, Sidebar 등 모든 페이지에서 사용되는 요소
+
+**원칙:**
+- 중복 코드는 유지보수 비용을 증가시킴
+- 공통 컴포넌트 수정 시 모든 사용처에 일관되게 반영됨
+- Don't Repeat Yourself (DRY) 원칙 준수
 
 ---
 

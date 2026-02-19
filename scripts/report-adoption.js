@@ -21,7 +21,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const DESIGN_SYSTEM_REPO = 'conewarrior/design-system';
-const PACKAGE_NAME = '@design-geniefy/ui';
+const PACKAGE_NAME = '@gpters-internal/ui';
 
 // opt-in 확인
 function isOptedIn() {
