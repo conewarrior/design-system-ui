@@ -81,21 +81,23 @@ npm init -y
 npm install @gpters-internal/ui
 ```
 
-### Step 2.5: 토큰 import 추가
+### Step 2.5: 토큰 로드 추가
 
-**Next.js 프로젝트** (`app/layout.tsx`에 추가):
+> **주의**: Tailwind CSS v4는 CSS `@import`로 외부 URL을 번들링 시도하므로, 반드시 HTML `<link>` 태그로 로드해야 합니다.
+
+**Next.js 프로젝트** (`app/layout.tsx`의 `<head>` 또는 metadata에 추가):
 ```tsx
-import '@gpters-internal/ui/tokens.css';
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css" />
 ```
 
-**React (CRA/Vite)** (`src/index.tsx` 또는 `src/main.tsx`에 추가):
-```tsx
-import '@gpters-internal/ui/tokens.css';
+**React (CRA/Vite)** (`index.html`의 `<head>`에 추가):
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css" />
 ```
 
 **HTML/CSS 프로젝트** (`<head>`에 추가):
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css" />
 ```
 
 ### Step 2.6: Tailwind v4 설치 (shadcn/ui 사용 시)
@@ -128,7 +130,7 @@ export default {
 
 3. **globals.css (또는 메인 CSS 파일)에 Tailwind 추가:**
 
-tokens.css import 다음에 추가:
+tokens.css `<link>` 로드 후, globals.css에 추가:
 ```css
 /* Tailwind CSS v4 */
 @import "tailwindcss";
@@ -553,22 +555,23 @@ else
   MISSING=$((MISSING + 1))
 fi
 
-# 2. tokens.css import 확인
-TOKENS_IMPORTED=false
-if [ -f "app/layout.tsx" ] && grep -q "@gpters-internal/ui/tokens.css" "app/layout.tsx" 2>/dev/null; then
-  TOKENS_IMPORTED=true
-fi
-if [ -f "src/main.tsx" ] && grep -q "@gpters-internal/ui/tokens.css" "src/main.tsx" 2>/dev/null; then
-  TOKENS_IMPORTED=true
-fi
-if [ -f "src/index.tsx" ] && grep -q "@gpters-internal/ui/tokens.css" "src/index.tsx" 2>/dev/null; then
-  TOKENS_IMPORTED=true
+# 2. tokens.css <link> 로드 확인
+TOKENS_LOADED=false
+# HTML 파일에서 <link> 태그 확인
+for f in index.html public/index.html src/index.html; do
+  if [ -f "$f" ] && grep -q "tokens.css" "$f" 2>/dev/null; then
+    TOKENS_LOADED=true
+  fi
+done
+# Next.js layout에서 <link> 태그 확인
+if [ -f "app/layout.tsx" ] && grep -q "tokens.css" "app/layout.tsx" 2>/dev/null; then
+  TOKENS_LOADED=true
 fi
 
-if [ "$TOKENS_IMPORTED" = true ]; then
-  echo -e "${GREEN}✅ tokens.css import 완료${NC}"
+if [ "$TOKENS_LOADED" = true ]; then
+  echo -e "${GREEN}✅ tokens.css <link> 로드 완료${NC}"
 else
-  echo -e "${YELLOW}⚠️ tokens.css import 확인 필요${NC}"
+  echo -e "${YELLOW}⚠️ tokens.css <link> 태그 확인 필요 (HTML <head>에 추가)${NC}"
 fi
 
 # 3. CLAUDE.md 디자인 시스템 섹션 확인
