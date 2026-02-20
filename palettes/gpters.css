@@ -1,0 +1,70 @@
+/* ============================================================================
+   Palette: GPTers
+   Brand Color: #EF6020 (Orange)
+   ============================================================================
+   사용법:
+   import '@gpters-internal/ui/tokens.css';
+   import '@gpters-internal/ui/palettes/gpters.css';
+   ============================================================================ */
+
+:root {
+  /* Primary (GPTers Orange - #EF6020 기준) */
+  --primary-50: #fff5ed;
+  --primary-100: #ffe8d5;
+  --primary-200: #fecbaa;
+  --primary-300: #fda674;
+  --primary-400: #f47a3b;
+  --primary-500: #EF6020;
+  --primary-600: #d94a12;
+  --primary-700: #b43712;
+  --primary-800: #902d16;
+  --primary-900: #742815;
+  --primary-950: #3f1109;
+
+  /* Secondary (Neutral Warm) */
+  --secondary-50: #fafaf9;
+  --secondary-100: #f5f5f4;
+  --secondary-200: #e7e5e4;
+  --secondary-300: #d6d3d1;
+  --secondary-400: #a8a29e;
+  --secondary-500: #78716c;
+  --secondary-600: #57534e;
+  --secondary-700: #44403c;
+  --secondary-800: #292524;
+  --secondary-900: #1c1917;
+  --secondary-950: #0c0a09;
+
+  /* Semantic alias overrides */
+  --color-primary: var(--primary-500);
+  --color-primary-hover: var(--primary-600);
+  --color-primary-active: var(--primary-700);
+  --color-primary-disabled: var(--primary-300);
+  --color-primary-bg: var(--primary-50);
+  --color-primary-bg-hover: var(--primary-100);
+  --color-primary-text: var(--primary-600);
+
+  --color-secondary: var(--secondary-100);
+  --color-secondary-foreground: var(--secondary-900);
+
+  /* Legacy aliases */
+  --color-ring: var(--primary-500);
+  --color-accent: var(--primary-500);
+  --color-accent-foreground: white;
+}
+
+.dark {
+  --color-primary: var(--primary-400);
+  --color-primary-hover: var(--primary-300);
+  --color-primary-active: var(--primary-200);
+  --color-primary-disabled: var(--primary-700);
+  --color-primary-bg: var(--primary-950);
+  --color-primary-bg-hover: var(--primary-900);
+  --color-primary-text: var(--primary-400);
+
+  --color-secondary: var(--secondary-800);
+  --color-secondary-foreground: var(--secondary-50);
+
+  --color-ring: var(--primary-400);
+  --color-accent: var(--primary-400);
+  --color-accent-foreground: var(--secondary-950);
+}
