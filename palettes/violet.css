@@ -1,0 +1,58 @@
+/* ============================================================================
+   Palette: Violet
+   Brand Color: #7C3AED
+   ============================================================================ */
+
+:root {
+  --primary-50: #f5f3ff;
+  --primary-100: #ede9fe;
+  --primary-200: #ddd6fe;
+  --primary-300: #c4b5fd;
+  --primary-400: #a78bfa;
+  --primary-500: #7C3AED;
+  --primary-600: #6d28d9;
+  --primary-700: #5b21b6;
+  --primary-800: #4c1d95;
+  --primary-900: #3b1578;
+  --primary-950: #1e0a3e;
+
+  --secondary-50: #faf5ff;
+  --secondary-100: #f3e8ff;
+  --secondary-200: #e9d5ff;
+  --secondary-300: #d8b4fe;
+  --secondary-400: #c084fc;
+  --secondary-500: #a855f7;
+  --secondary-600: #9333ea;
+  --secondary-700: #7e22ce;
+  --secondary-800: #6b21a8;
+  --secondary-900: #581c87;
+  --secondary-950: #3b0764;
+
+  --color-primary: var(--primary-500);
+  --color-primary-hover: var(--primary-600);
+  --color-primary-active: var(--primary-700);
+  --color-primary-disabled: var(--primary-300);
+  --color-primary-bg: var(--primary-50);
+  --color-primary-bg-hover: var(--primary-100);
+  --color-primary-text: var(--primary-600);
+  --color-secondary: var(--secondary-100);
+  --color-secondary-foreground: var(--secondary-900);
+  --color-ring: var(--primary-500);
+  --color-accent: var(--primary-500);
+  --color-accent-foreground: white;
+}
+
+.dark {
+  --color-primary: var(--primary-400);
+  --color-primary-hover: var(--primary-300);
+  --color-primary-active: var(--primary-200);
+  --color-primary-disabled: var(--primary-700);
+  --color-primary-bg: var(--primary-950);
+  --color-primary-bg-hover: var(--primary-900);
+  --color-primary-text: var(--primary-400);
+  --color-secondary: var(--secondary-800);
+  --color-secondary-foreground: var(--secondary-50);
+  --color-ring: var(--primary-400);
+  --color-accent: var(--primary-400);
+  --color-accent-foreground: var(--secondary-950);
+}

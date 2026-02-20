@@ -1,0 +1,58 @@
+/* ============================================================================
+   Palette: Blue
+   Brand Color: #2563EB
+   ============================================================================ */
+
+:root {
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  --primary-500: #2563EB;
+  --primary-600: #2152c9;
+  --primary-700: #1d41a7;
+  --primary-800: #1a3786;
+  --primary-900: #1a306e;
+  --primary-950: #111d45;
+
+  --secondary-50: #f8fafc;
+  --secondary-100: #f1f5f9;
+  --secondary-200: #e2e8f0;
+  --secondary-300: #cbd5e1;
+  --secondary-400: #94a3b8;
+  --secondary-500: #64748b;
+  --secondary-600: #475569;
+  --secondary-700: #334155;
+  --secondary-800: #1e293b;
+  --secondary-900: #0f172a;
+  --secondary-950: #020617;
+
+  --color-primary: var(--primary-500);
+  --color-primary-hover: var(--primary-600);
+  --color-primary-active: var(--primary-700);
+  --color-primary-disabled: var(--primary-300);
+  --color-primary-bg: var(--primary-50);
+  --color-primary-bg-hover: var(--primary-100);
+  --color-primary-text: var(--primary-600);
+  --color-secondary: var(--secondary-100);
+  --color-secondary-foreground: var(--secondary-900);
+  --color-ring: var(--primary-500);
+  --color-accent: var(--primary-500);
+  --color-accent-foreground: white;
+}
+
+.dark {
+  --color-primary: var(--primary-400);
+  --color-primary-hover: var(--primary-300);
+  --color-primary-active: var(--primary-200);
+  --color-primary-disabled: var(--primary-700);
+  --color-primary-bg: var(--primary-950);
+  --color-primary-bg-hover: var(--primary-900);
+  --color-primary-text: var(--primary-400);
+  --color-secondary: var(--secondary-800);
+  --color-secondary-foreground: var(--secondary-50);
+  --color-ring: var(--primary-400);
+  --color-accent: var(--primary-400);
+  --color-accent-foreground: var(--secondary-950);
+}

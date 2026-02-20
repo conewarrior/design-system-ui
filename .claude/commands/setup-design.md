@@ -81,24 +81,32 @@ npm init -y
 npm install @gpters-internal/ui
 ```
 
-### Step 2.5: 토큰 로드 추가
+### Step 2.5: 토큰 및 팔레트 로드
 
-> **주의**: Tailwind CSS v4는 CSS `@import`로 외부 URL을 번들링 시도하므로, 반드시 HTML `<link>` 태그로 로드해야 합니다.
+프로젝트의 메인 CSS 파일 (globals.css 등)에 추가:
 
-**Next.js 프로젝트** (`app/layout.tsx`의 `<head>` 또는 metadata에 추가):
-```tsx
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css" />
+```css
+@import '@gpters-internal/ui/tokens.css';
 ```
 
-**React (CRA/Vite)** (`index.html`의 `<head>`에 추가):
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css" />
+**AskUserQuestion으로 컬러 팔레트 선택:**
+```
+질문: "어떤 컬러를 메인으로 쓸 건가요?"
+- **GPTers Orange** (#EF6020) — 따뜻한 오렌지
+- **Blue** (#2563EB) — 클래식 블루
+- **Violet** (#7C3AED) — 보라/퍼플
+- **Emerald** (#059669) — 그린/에메랄드
+- **Slate** (#475569) — 뉴트럴 슬레이트
 ```
 
-**HTML/CSS 프로젝트** (`<head>`에 추가):
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/conewarrior/design-system/tokens.css" />
+선택에 따라 팔레트 import 추가:
+```css
+@import '@gpters-internal/ui/tokens.css';
+@import '@gpters-internal/ui/palettes/gpters.css';  /* 선택된 팔레트 */
 ```
+
+> 팔레트는 tokens.css의 primary/secondary 색상을 오버라이드합니다.
+> tokens.css 다음에 import해야 정상 적용됩니다.
 
 ### Step 2.6: Tailwind v4 설치 (shadcn/ui 사용 시)
 
