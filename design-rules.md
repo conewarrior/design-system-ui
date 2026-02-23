@@ -67,7 +67,6 @@ styles/globals.css
 | Alert | `✓`, `⚠`, `✕`, `ℹ` 텍스트 아이콘 | SVG만 허용 |
 | Alert | `"` `"` 등 유니코드 따옴표 아이콘 | SVG만 허용 |
 | Card | `box-shadow: 0 4px 6px rgba(...)` | Shadow 금지 |
-| Button | `border-radius: 8px` 이상 | 토큰만 사용 |
 | List item | `borderLeft` + `background` + `fontWeight` 동시 변경 | 단일 피드백만 |
 
 ```tsx
@@ -165,34 +164,7 @@ styles/globals.css
 
 ## 2. 필수 제약 (Constraints)
 
-### 2.1 Border Radius
-
-```tsx
-// ✅ Tailwind 클래스 사용 (권장)
-<div className="rounded-md">  {/* 4px */}
-
-// CSS 변수 사용 (필요시)
-border-radius: var(--radius-md);
-```
-
-| 용도 | Tailwind 클래스 | CSS 변수 | 값 |
-|------|-----------------|----------|-----|
-| 미세 라운드 (태그, 뱃지) | `rounded-sm` | `--radius-sm` | 2px |
-| **기본값** (버튼, 인풋) | `rounded-md` | `--radius-md` | 4px |
-| 카드, 모달 | `rounded-lg` | `--radius-lg` | 6px |
-| 큰 카드, 다이얼로그 | `rounded-xl` | `--radius-xl` | 8px |
-| 대형 컨테이너 | `rounded-2xl` | `--radius-2xl` | 12px |
-| 원형 (아바타, 토글) | `rounded-full` | `--radius-full` | 9999px |
-
-**디자인 근거:**
-- 6px 이하의 subtle radius가 더 세련되고 professional한 인상
-- 8px 이상은 "친근한/playful" 느낌으로 범용성 낮음
-- Apple HIG, Linear, Vercel 등 모던 시스템은 4-6px 기본값 사용
-- 과도한 radius는 요소를 뭉툭하게 보이게 하여 시각적 긴장감 저하
-
-**금지**: 임의의 px 값 (`border-radius: 5px`) 사용 불가
-
-### 2.2 간격 (Spacing)
+### 2.1 간격 (Spacing)
 
 모든 간격은 Tailwind의 4px 기반 스케일을 사용한다.
 
@@ -219,7 +191,7 @@ border-radius: var(--radius-md);
 | `p-8`, `m-8`, `gap-8` | 32px | 섹션 간격 |
 | `p-12`, `m-12`, `gap-12` | 48px | 대형 섹션 간격 |
 
-### 2.3 색상 (Colors)
+### 2.2 색상 (Colors)
 
 `globals.css` 외부의 색상 도입 금지.
 
@@ -254,7 +226,7 @@ border-color: hsl(var(--border));
 | `border-border` | 기본 테두리 |
 | `border-input` | 입력 필드 테두리 |
 
-### 2.4 화면당 컴포넌트 수
+### 2.3 화면당 컴포넌트 수
 
 **최대 7개** (± 2 Miller's Law)
 
@@ -268,7 +240,7 @@ border-color: hsl(var(--border));
 2. 탭/아코디언으로 숨기기
 3. 별도 페이지로 분리
 
-### 2.5 화면당 색상 수
+### 2.4 화면당 색상 수
 
 **최대 3개** (텍스트 색상 제외)
 
@@ -282,7 +254,7 @@ border-color: hsl(var(--border));
 - `--color-muted` (보조)
 - `--color-primary` (링크/강조)
 
-### 2.6 컨테이너 중첩 금지 (Flat Structure)
+### 2.5 컨테이너 중첩 금지 (Flat Structure)
 
 **불필요한 wrapper/container 중첩은 금지한다.**
 
@@ -338,7 +310,7 @@ border-color: hsl(var(--border));
 </div>
 ```
 
-### 2.7 과도한 인터랙션 효과 금지 (Minimal Feedback)
+### 2.6 과도한 인터랙션 효과 금지 (Minimal Feedback)
 
 **상태 변화는 단일 시각적 피드백으로 충분하다.**
 
@@ -379,7 +351,7 @@ border-color: hsl(var(--border));
 - font-weight 변경은 텍스트 너비가 바뀌어 레이아웃이 흔들림
 - Linear, Notion, Figma 등 모던 앱은 배경색 변경만 사용
 
-### 2.8 이모지 및 텍스트 아이콘 금지 (SVG Icons Only)
+### 2.7 이모지 및 텍스트 아이콘 금지 (SVG Icons Only)
 
 **아이콘은 반드시 SVG를 사용한다. 이모지와 텍스트 문자 사용 금지.**
 
@@ -429,7 +401,7 @@ border-color: hsl(var(--border));
 - Heroicons (`@heroicons/react`)
 - Radix Icons (`@radix-ui/react-icons`)
 
-### 2.9 Shadow 사용 제한 (Flat Design)
+### 2.8 Shadow 사용 제한 (Flat Design)
 
 **Shadow는 기본적으로 사용하지 않는다. Border로 대체한다.**
 
@@ -466,7 +438,7 @@ border-color: hsl(var(--border));
 - Border + spacing으로 충분히 구분 가능
 - Linear, Notion, GitHub 등 모던 앱은 shadow 최소화
 
-### 2.10 줄바꿈 금지 요소 (No Text Wrap)
+### 2.9 줄바꿈 금지 요소 (No Text Wrap)
 
 **특정 요소는 반드시 한 줄을 유지한다. 줄바꿈 금지.**
 
@@ -517,7 +489,7 @@ td.date, td.number, td.id, td.status {
 - 줄바꿈 대신 `text-overflow: ellipsis` 사용
 - 또는 컨테이너에 `overflow-x: auto` (가로 스크롤)
 
-### 2.11 레이아웃 위계: Header > Sidebar (Layout Hierarchy)
+### 2.10 레이아웃 위계: Header > Sidebar (Layout Hierarchy)
 
 **상단바(Header)가 항상 최상위. 사이드바는 그 아래 위계.**
 
@@ -566,7 +538,7 @@ td.date, td.number, td.id, td.status {
 
 **예외:** 없음. 이 규칙은 거의 절대적.
 
-### 2.12 반응형 필수 (Responsive by Default)
+### 2.11 반응형 필수 (Responsive by Default)
 
 **모든 웹 UI는 기본적으로 반응형으로 구현한다.**
 
@@ -622,7 +594,7 @@ td.date, td.number, td.id, td.status {
 - 아바타 (`width: 40px`)
 - 사이드바 (`width: 240px` 또는 `min-width`)
 
-### 2.13 배경색 단일 레이어 (Single Background Layer)
+### 2.12 배경색 단일 레이어 (Single Background Layer)
 
 **배경색은 `<html>` 또는 `<body>`에서 한 번만 지정. 레이어 중첩 금지.**
 
@@ -657,7 +629,7 @@ td.date, td.number, td.id, td.status {
 - 중첩된 컨테이너에 배경색
 - "그냥 있으면 좋을 것 같아서" 추가한 배경
 
-### 2.14 유틸리티 클래스 vs 컴포넌트 구분 (Utility vs Component)
+### 2.13 유틸리티 클래스 vs 컴포넌트 구분 (Utility vs Component)
 
 **globals.css에는 텍스트 유틸리티만 정의. 구조적 요소는 React 컴포넌트로.**
 
@@ -698,7 +670,7 @@ td.date, td.number, td.id, td.status {
 | 인라인 태그/뱃지 | 컴포넌트 | `<Badge>` from shadcn |
 | 섹션 제목 스타일 | 유틸리티 | `.text-section-title` 또는 Tailwind 클래스 조합 |
 
-### 2.15 컴포넌트 최소 DOM (Minimal DOM Structure)
+### 2.14 컴포넌트 최소 DOM (Minimal DOM Structure)
 
 **컴포넌트는 최소한의 DOM 요소로 구성한다.**
 
@@ -782,7 +754,6 @@ Tailwind 클래스와 @gpters-internal/ui에서 사용할 요소를 선택한다
 체크리스트:
 - [ ] 사용할 색상 클래스 목록 (최대 3개)
 - [ ] 사용할 간격 클래스 목록
-- [ ] 사용할 radius 클래스
 - [ ] @gpters-internal/ui 컴포넌트 중 재사용 가능한 것
 ```
 
@@ -806,7 +777,6 @@ rounded-lg           /* 모서리 (6px) */
 - [ ] Tailwind 클래스 사용 (style 속성 최소화)
 - [ ] 하드코딩된 색상 없음 (#fff, rgb, bg-[#xxx] 등)
 - [ ] 하드코딩된 간격 없음 (px, rem, p-[20px] 등)
-- [ ] radius는 Tailwind 클래스 (rounded-*) 사용
 - [ ] 컴포넌트 수 ≤ 7
 - [ ] 배경/강조 색상 수 ≤ 3
 - [ ] 모호한 주석 없음 ("예쁘게" 등)
@@ -831,8 +801,8 @@ rounded-lg           /* 모서리 (6px) */
 ❌ 제약 위반 발견
 
 위반 항목:
-1. [C-2.3] 하드코딩 색상: `color: #333` → `var(--color-foreground)` 사용
-2. [C-2.2] 임의 간격: `padding: 30px` → `var(--spacing-4)` 사용
+1. [C-2.2] 하드코딩 색상: `color: #333` → `var(--color-foreground)` 사용
+2. [C-2.1] 임의 간격: `padding: 30px` → `var(--spacing-4)` 사용
 
 수정 후 다시 검증합니다.
 ```
@@ -1017,3 +987,4 @@ import { PageHeader } from '@/components/page-header';
 | 2026-01-22 | v1.1 | Token Safety 섹션 추가 (CODEOWNERS, CI Check, 토큰 보호 규칙) |
 | 2026-01-27 | v1.2 | radius 축소, 컨테이너 중첩 금지, 인터랙션 효과 금지, 이모지/텍스트 아이콘 금지, shadow 제한, nowrap 필수, Header>Sidebar 위계, 반응형 필수, 배경 단일 레이어, 최소 DOM 구조 |
 | 2026-01-30 | v1.3 | **Tailwind First 원칙 추가**: tokens.css → globals.css + Tailwind v4 @theme 구조로 전환. CSS 변수 대신 Tailwind 유틸리티 클래스 우선 사용. 모든 예시 코드 Tailwind 클래스로 업데이트. 경로 수정 (src/components/ → components/) |
+| 2026-02-23 | v1.4 | Border Radius 제약 섹션 제거 (2.1 삭제). radius 자유 사용 허용. 섹션 번호 재정렬 (2.1~2.14) |
