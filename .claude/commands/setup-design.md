@@ -1,4 +1,4 @@
-# /setup-design
+# /setup-design (v1.4)
 
 프로젝트에 @gpters-internal/ui 디자인 시스템을 자동 설정합니다.
 
