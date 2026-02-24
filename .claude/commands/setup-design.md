@@ -337,4 +337,5 @@ chmod +x .claude/scripts/lint-design-rules.sh
 |------|------|
 | package.json 없음 | `npm init -y`로 자동 생성 |
 | npm install 실패 | 에러 출력, 나머지 단계 계속 진행 |
+| globals.css 없음 | 새로 생성 |
 | .claude 폴더 없음 | 폴더 생성 후 파일 생성 |
