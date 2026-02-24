@@ -1,0 +1,70 @@
+name: Sync commands to AI Toolkit
+
+on:
+  push:
+    paths:
+      - '.claude/commands/**'
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect changed commands
+        id: changes
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- '.claude/commands/' | grep '\.md$' || true)
+          echo "files=$CHANGED" >> $GITHUB_OUTPUT
+          if [ -z "$CHANGED" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to AI Toolkit
+        if: steps.changes.outputs.skip == 'false'
+        run: |
+          MCP_URL="https://ai-toolkit.gpters.org/api/mcp"
+
+          for FILE in ${{ steps.changes.outputs.files }}; do
+            # 파일명에서 커맨드 이름 추출 (setup-design.md → setup-design)
+            CMD_NAME=$(basename "$FILE" .md)
+            CONTENT=$(cat "$FILE")
+
+            echo "📤 Deploying command: $CMD_NAME"
+
+            # MCP JSON-RPC 요청
+            RESPONSE=$(curl -s -X POST "$MCP_URL" \
+              -H "Content-Type: application/json" \
+              -d "$(jq -n \
+                --arg name "$CMD_NAME" \
+                --arg content "$CONTENT" \
+                '{
+                  jsonrpc: "2.0",
+                  id: 1,
+                  method: "tools/call",
+                  params: {
+                    name: "deploy_skill",
+                    arguments: {
+                      type: "command",
+                      name: $name,
+                      id: $name,
+                      content: $content,
+                      changelog: "Auto-sync from design-system-ui repo"
+                    }
+                  }
+                }'
+              )")
+
+            echo "$RESPONSE" | jq .
+
+            # 에러 체크
+            if echo "$RESPONSE" | jq -e '.error' > /dev/null 2>&1; then
+              echo "❌ Failed to deploy $CMD_NAME"
+              exit 1
+            fi
+
+            echo "✅ $CMD_NAME deployed"
+          done
