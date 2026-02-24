@@ -37,8 +37,9 @@ jobs:
 
             echo "📤 Deploying command: $CMD_NAME"
 
-            # MCP JSON-RPC 요청
+            # MCP JSON-RPC 요청 (OAuth Bearer Token)
             RESPONSE=$(curl -s -X POST "$MCP_URL" \
+              -H "Authorization: Bearer ${{ secrets.AI_TOOLKIT_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "$(jq -n \
                 --arg name "$CMD_NAME" \
