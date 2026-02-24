@@ -1,4 +1,4 @@
-# /setup-design v1.4
+# /setup-design v1.5
 
 프로젝트에 @gpters-internal/ui 디자인 시스템을 자동 설정합니다.
 
@@ -7,6 +7,7 @@
 - CLAUDE.md에 디자인 규칙 추가
 - UI 생성 시 규칙 자동 적용 (Hook) - node_modules에서 직접 참조
 - 컴포넌트 작성 시 design-rules 위반 자동 검증
+- Dependabot + auto-merge로 @gpters-internal/ui 자동 업데이트
 
 ---
 
@@ -196,6 +197,12 @@ UI 생성 시 design-rules skill이 node_modules에서 자동 로드됩니다:
   - **stdin에서 JSON 파싱**: `jq -r '.tool_input.file_path'`로 파일 경로 추출
   - **design-rules 위반 자동 검증** (lint-design-rules.sh)
 
+**Dependabot + auto-merge 설명:**
+- Dependabot이 매일 @gpters-internal/ui 새 버전을 확인
+- 새 버전 발견 시 PR 자동 생성
+- major 버전 변경이 아니면 자동 머지
+- design-rules.md, lint 스크립트 등이 자동으로 최신 버전 유지
+
 **필수 의존성:**
 - `jq`: JSON 파싱 도구 (macOS: `brew install jq`, Ubuntu: `apt install jq`)
 
@@ -309,7 +316,87 @@ exit $VIOLATIONS
 chmod +x .claude/scripts/lint-design-rules.sh
 ```
 
-### Step 8: 완료 메시지
+### Step 8: Dependabot 자동 업데이트 설정
+
+소비자 프로젝트에 `.github/dependabot.yml`과 `.github/workflows/dependabot-auto-merge.yml`을 생성합니다.
+
+#### .github/dependabot.yml
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "@gpters-internal/ui"
+    labels:
+      - "auto-merge"
+    open-pull-requests-limit: 5
+```
+
+#### .github/workflows/dependabot-auto-merge.yml
+```yaml
+name: Auto-merge Dependabot PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Check if @gpters-internal/ui update
+        id: check
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          if [[ "$TITLE" == *"@gpters-internal/ui"* ]]; then
+            echo "is_geniefy_ui=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_geniefy_ui=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for major version bump
+        id: major
+        if: steps.check.outputs.is_geniefy_ui == 'true'
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          if [[ "$TITLE" =~ from\ ([0-9]+)\.[0-9]+\.[0-9]+\ to\ ([0-9]+)\.[0-9]+\.[0-9]+ ]]; then
+            FROM_MAJOR="${BASH_REMATCH[1]}"
+            TO_MAJOR="${BASH_REMATCH[2]}"
+            if [[ "$FROM_MAJOR" != "$TO_MAJOR" ]]; then
+              echo "is_major=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_major=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "is_major=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Wait for CI checks
+        if: steps.check.outputs.is_geniefy_ui == 'true' && steps.major.outputs.is_major != 'true'
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          running-workflow-name: 'Auto-merge Dependabot PRs'
+
+      - name: Enable auto-merge
+        if: steps.check.outputs.is_geniefy_ui == 'true' && steps.major.outputs.is_major != 'true'
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Step 9: 완료 메시지
 
 ```
 ✅ @gpters-internal/ui 디자인 시스템 설정 완료!
@@ -319,6 +406,7 @@ chmod +x .claude/scripts/lint-design-rules.sh
 - CLAUDE.md: 디자인 규칙 + 컴포넌트 생성 규칙
 - Hook: UI 생성 시 node_modules에서 design-rules.md 자동 로드
 - Hook: 컴포넌트 작성 시 design-rules 위반 자동 검증 (lint-design-rules.sh)
+- Dependabot: @gpters-internal/ui 자동 업데이트
 
 자동 검증:
 - 텍스트 아이콘/이모지 사용 → ❌ 위반 탐지
@@ -339,3 +427,4 @@ chmod +x .claude/scripts/lint-design-rules.sh
 | npm install 실패 | 에러 출력, 나머지 단계 계속 진행 |
 | globals.css 없음 | 새로 생성 |
 | .claude 폴더 없음 | 폴더 생성 후 파일 생성 |
+| .github 폴더 없음 | 폴더 생성 후 파일 생성 |
