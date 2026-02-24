@@ -4,7 +4,7 @@ All notable changes to `@gpters-internal/ui` will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.0.22] - 2026-02-24
 
 ### Changed
 - design-rules.md v1.4: Border Radius 섹션 제거 (제약 완화)

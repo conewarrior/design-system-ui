@@ -12,24 +12,15 @@
 
 ## 실행 단계
 
-### Step 1: 프로젝트 타입 확인
+### Step 1: 프로젝트 확인
 
 **package.json이 있으면:**
-→ Node.js 프로젝트로 진행 (Step 2로)
+→ Step 2로 진행
 
 **package.json이 없으면:**
-AskUserQuestion으로 물어봅니다:
+→ `npm init -y`로 자동 생성 후 Step 2로 진행
 
-질문: "프로젝트 타입을 선택하세요"
-- **Node.js 프로젝트** (권장): npm 패키지 설치 (package.json 자동 생성)
-- **HTML/CSS만**: CDN 링크만 사용 (npm 설치 없음)
-
-### Step 2: npm 패키지 설치 (Node.js 프로젝트)
-
-**package.json이 없으면 먼저 생성:**
-```bash
-npm init -y
-```
+### Step 2: npm 패키지 설치
 
 **패키지 설치:**
 ```bash
@@ -63,19 +54,10 @@ npm install @gpters-internal/ui
 > 팔레트는 tokens.css의 primary/secondary 색상을 오버라이드합니다.
 > tokens.css 다음에 import해야 정상 적용됩니다.
 
-### Step 4: Tailwind v4 설치 (shadcn/ui 사용 시)
+### Step 4: Tailwind v4 + PostCSS + @theme 설정
 
-> shadcn/ui 컴포넌트를 사용하려면 Tailwind CSS v4가 필요합니다.
+> shadcn/ui 컴포넌트를 사용하려면 Tailwind CSS v4가 필수입니다.
 > tokens.css의 값을 @theme으로 매핑하여 shadcn 컴포넌트가 디자인 토큰을 사용하도록 합니다.
-
-**AskUserQuestion으로 확인:**
-```
-질문: "Tailwind CSS v4를 설치하시겠습니까?"
-- **설치** (권장): shadcn/ui 컴포넌트 사용 가능
-- **건너뛰기**: 기존 CSS 방식 유지
-```
-
-**"설치" 선택 시:**
 
 1. **패키지 설치:**
 ```bash
@@ -353,6 +335,6 @@ chmod +x .claude/scripts/lint-design-rules.sh
 
 | 상황 | 처리 |
 |------|------|
-| package.json 없음 | npm 설치 스킵, CDN만 설정 |
+| package.json 없음 | `npm init -y`로 자동 생성 |
 | npm install 실패 | 에러 출력, 나머지 단계 계속 진행 |
 | .claude 폴더 없음 | 폴더 생성 후 파일 생성 |
