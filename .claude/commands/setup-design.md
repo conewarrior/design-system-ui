@@ -176,7 +176,7 @@ UI 생성 시 design-rules skill이 node_modules에서 자동 로드됩니다:
   "hooks": {
     "UserPromptSubmit": [
       {
-        "hooks": [{"type": "command", "command": "cat node_modules/@gpters-internal/ui/.claude/skills/design-rules.md"}]
+        "hooks": [{"type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/scripts/load-design-rules.sh"}]
       }
     ],
     "PostToolUse": [
@@ -192,7 +192,7 @@ UI 생성 시 design-rules skill이 node_modules에서 자동 로드됩니다:
 ```
 
 **Hook 설명:**
-- `UserPromptSubmit`: 모든 프롬프트 제출 시 **node_modules에서** design-rules.md 로딩 (npm 업데이트 시 자동 반영)
+- `UserPromptSubmit`: UI 관련 키워드 감지 시에만 design-rules.md 로딩 (컨텍스트 절약, ~10,000자/메시지)
 - `PostToolUse`: Write|Edit 도구 사용 시:
   - **stdin에서 JSON 파싱**: `jq -r '.tool_input.file_path'`로 파일 경로 추출
   - **design-rules 위반 자동 검증** (lint-design-rules.sh)
@@ -206,13 +206,30 @@ UI 생성 시 design-rules skill이 node_modules에서 자동 로드됩니다:
 **필수 의존성:**
 - `jq`: JSON 파싱 도구 (macOS: `brew install jq`, Ubuntu: `apt install jq`)
 
-### Step 7: Design Rules 검증 스크립트 생성
-`.claude/scripts/lint-design-rules.sh` 파일을 생성합니다:
+### Step 7: Design Rules 스크립트 생성
+`.claude/scripts/` 폴더에 2개 스크립트를 생성합니다:
 
 ```bash
 mkdir -p .claude/scripts
 ```
 
+#### 7-1. load-design-rules.sh (조건부 규칙 로드)
+```bash
+#!/bin/bash
+# design-rules 조건부 로드 - UI 관련 키워드가 있을 때만
+# UserPromptSubmit hook에서 stdin으로 {"prompt": "..."} JSON을 받음
+
+PROMPT=$(jq -r '.prompt // empty' 2>/dev/null)
+RULES_PATH="node_modules/@gpters-internal/ui/.claude/skills/design-rules.md"
+
+if echo "$PROMPT" | grep -qiE '(컴포넌트|component|ui|디자인|design|페이지|page|화면|screen|레이아웃|layout|스타일|style|버튼|button|카드|card|모달|modal|폼|form|테이블|table|사이드바|sidebar|네비|nav|헤더|header)'; then
+  if [ -f "$RULES_PATH" ]; then
+    cat "$RULES_PATH"
+  fi
+fi
+```
+
+#### 7-2. lint-design-rules.sh (위반 탐지)
 ```bash
 #!/bin/bash
 # design-rules.md 위반 탐지 스크립트
@@ -313,7 +330,7 @@ exit $VIOLATIONS
 
 **스크립트 생성 후 실행 권한 부여:**
 ```bash
-chmod +x .claude/scripts/lint-design-rules.sh
+chmod +x .claude/scripts/load-design-rules.sh .claude/scripts/lint-design-rules.sh
 ```
 
 ### Step 8: Dependabot 자동 업데이트 설정
@@ -404,7 +421,7 @@ jobs:
 설치된 항목:
 - npm 패키지: @gpters-internal/ui
 - CLAUDE.md: 디자인 규칙 + 컴포넌트 생성 규칙
-- Hook: UI 생성 시 node_modules에서 design-rules.md 자동 로드
+- Hook: UI 관련 키워드 감지 시 design-rules.md 조건부 로드 (컨텍스트 절약)
 - Hook: 컴포넌트 작성 시 design-rules 위반 자동 검증 (lint-design-rules.sh)
 - Dependabot: @gpters-internal/ui 자동 업데이트
 
