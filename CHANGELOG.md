@@ -4,6 +4,19 @@ All notable changes to `@gpters-internal/ui` will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.0.23] - 2026-02-25
+
+### Added
+- load-design-rules.sh: UserPromptSubmit hook 조건부 실행 스크립트 (UI 키워드 감지 시에만 로드)
+
+### Changed
+- setup-design v1.5: UserPromptSubmit hook을 조건부 실행으로 변경 (매 메시지 ~10,000자 컨텍스트 절약)
+- setup-design: Dependabot + auto-merge 복원 (조직 전체 npm 자동 업데이트 핵심 메커니즘)
+
+### Removed
+- setup-design에서 제거: HTML-only 옵션 (npm 필수)
+- setup-design에서 제거: Tailwind 설치 여부 질문 (필수로 변경)
+
 ## [0.0.22] - 2026-02-24
 
 ### Changed
@@ -14,7 +27,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Removed
 - setup-design에서 제거: auto-contribute.sh, verify-design-setup.sh, design-system-state.json
 - setup-design에서 제거: eslint.config.mjs + npm devDeps 3개 (`eslint`, `@eslint/js`, `typescript-eslint`)
-- setup-design에서 제거: dependabot.yml, auto-merge.yml (GitHub 워크플로우)
+- setup-design에서 제거: dependabot.yml, auto-merge.yml (→ 0.0.23에서 복원)
 - design-rules.md: Section 2.1 Border Radius (과도한 제약)
 
 ## [0.0.21] - 2025-02-22
